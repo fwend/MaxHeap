@@ -1,14 +1,23 @@
 class MaxHeap {
   
-    constructor(capacity) {
+    constructor(capacity, compare) {
         this.tree = Array(capacity);
         this.size = 0;
         this.capacity = capacity;
+        this.compare = compare;
     }
 
     parent(i) {
         return Math.floor((i - 1) / 2);
     }
+    
+    left(i) {
+        return 2 * i + 1;
+    }
+    
+    right(i) {
+        return 2 * i + 2;
+    }    
 
     insertKey(k) { 
         this.size++;
@@ -29,11 +38,11 @@ class MaxHeap {
 
         let largest = i; 
 
-        if (l < this.size && this.tree[l] > this.tree[largest]) {
+        if (l < this.size && this.compare(this.tree[l] , this.tree[largest])) { 
             largest = l; 
         }
 
-        if (r < this.size && this.tree[r] > this.tree[largest]) {
+        if (r < this.size && this.compare(this.tree[r] , this.tree[largest])) { 
             largest = r; 
         }
 
@@ -55,13 +64,11 @@ class MaxHeap {
     }   
     
     increaseKey(i, key) {
-        if (key >= this.tree[i]) {
-            this.tree[i] = key;
-            while (i > 0 && this.tree[this.parent(i)] < this.tree[i]) {
-                this.swap(i, this.parent(i));
-                i = this.parent(i);
-            }
-        } else throw "new key is smaller than current key";
+        this.tree[i] = key;
+        while (i > 0 && this.compare(this.tree[i], this.tree[this.parent(i)])) { 
+            this.swap(i, this.parent(i));
+            i = this.parent(i);
+        }
     }
   
     getMax() { 
@@ -69,6 +76,12 @@ class MaxHeap {
             return this.tree[0];
         } else throw "tree is empty";
     } 
+    
+    getNode(i) {
+        if (i < this.size) {
+            return this.tree[i];
+        } else throw "index out of bounds";
+    }
 
     swap(i, j) {
         const tmp = this.tree[i];
