@@ -1,6 +1,6 @@
 class MaxHeap {
   
-    constructor(capacity, compare) {
+    constructor(capacity, compare= (a, b) => a > b) {
         this.tree = Array(capacity);
         this.size = 0;
         this.capacity = capacity;
